@@ -13,7 +13,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -134,9 +133,11 @@ public class AdminNoShowService {
 			+ "<p>" +"안녕하세요 " + rsvMemNm + "님 현재 회원님의 NoShow 횟수가 많아 회의실 예약 시스템에서 차단됩니다.</p>"
 			+ "<p> 차단기간 : " + afterBanDayString + "</p>" 
 			+ "<p> 문의는 해당메일로 답장 부탁드립니다.</p>";
+			
+			commonService.sendEmail(rsvInformation.getRsvMemEm(), subject, content);
+
 		}
 		
-		commonService.sendEmail(rsvInformation.getRsvMemEm(), subject, content);
 		
 		// history Update
 		String hstState = "NOSHOW";

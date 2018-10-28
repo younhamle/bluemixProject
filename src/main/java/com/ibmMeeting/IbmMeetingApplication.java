@@ -3,9 +3,9 @@ package com.ibmMeeting;
 
 
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -51,6 +51,9 @@ public class IbmMeetingApplication extends SpringBootServletInitializer {
 	
 	// app run
 	public static void main(String[] args) {
+		//set TimeZone->currentTimeMills때문
+		System.setProperty("user.timezone", "Asia/Seoul");
+		TimeZone.setDefault(null);	//바뀐 timezone반영을 위한 reset
 		SpringApplication.run(IbmMeetingApplication.class, args);
 	}
 	

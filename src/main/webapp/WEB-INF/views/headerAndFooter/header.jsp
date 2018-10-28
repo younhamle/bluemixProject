@@ -8,9 +8,9 @@
 <!-- │ark Sung Jun -->
 <!-- │ark Sung Jun -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.7.7/css/bootstrap.min.css">
-<script src="//code.jquery.com/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.7.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/resources/css/3.3.7/bootstrap.min.css">
+<script src="/resources/js/1.9.1/jquery-1.9.1.min.js"></script>
+<script src="/resources/js/3.3.7/bootstrap.min.js"></script>
 <script type="text/javascript" src="/resources/js/headerLocation.js"></script>  
  
  <style>

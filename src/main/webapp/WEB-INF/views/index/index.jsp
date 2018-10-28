@@ -1,18 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"
-	type="text/javascript"></script>
+<script src="/resources/js/jquery-2.1.1.min.js" type="text/javascript"></script>
 	
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />  
+<link rel="stylesheet" href="/resources/css/1.8.18/jquery-ui.css" type="text/css" />  
+<link rel="stylesheet" href="/resources/css/3.3.7/bootstrap.min.css">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://code.jquery.com/jquery-1.9.1.js"  type="text/javascript"></script>
-<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>  
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/resources/js/1.9.1/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/resources/js/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/resources/js/popper.js/1.12.6/popper.min.js"></script>  
+<script type="text/javascript" src="/resources/js/3.3.7/bootstrap.min.js"></script>
 <script type="text/javascript" src="/resources/bootstrap/js/bootbox.min.js"></script>  
 
 <link rel="stylesheet" type="text/css"	href="/resources/bootstrap/bootswatch.css" />
@@ -26,12 +23,13 @@
 <script type="text/javascript" src="/resources/scheduler/scheduler.min.js"></script>
 <script type="text/javascript" src="/resources/fullcalander/locale-all.js"></script>
 <script type="text/javascript" src="/resources/fullcalander/gcal.js"></script>
-<link rel="stylesheet" href="https://formden.com/static/cdn/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet" href="/resources/font-awesome-4.4.0/css/font-awesome.min.css" />
 
 <script type="text/javascript" src="/resources/js/headerLocation.js"></script>  
 
 <link href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link> 
-	<script type="text/javascript" src="/resources/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.js"></script>
+<script type="text/javascript" src="/resources/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.js"></script>
 <script type="text/javascript" src="/resources/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"></script>
 <link rel="stylesheet" type="text/css"	href="/resources/EasyAutocomplete-1.3.5/easy-autocomplete.css" />
 <link rel="stylesheet" type="text/css"	href="/resources/EasyAutocomplete-1.3.5/easy-autocomplete.min.css" />
@@ -243,7 +241,7 @@
 					<div class="form-group col-lg-4">
 						<div style="text-align:left; display:inline"><label class="control-label">이메일</label></div>
 					    <div style=" text-align:right; display:inline">
-					    	<label><span class="control-label" style="width:250px; color:#8d9193; font-size:12px; text-align:right">　　30분 전 Reminder 메일수신</span>
+					    	<label><span class="control-label" style="width:250px; color:#8d9193; font-size:12px; text-align:right" id="reminder"></span>
 					 	    <input type="checkbox" id="rsvEmailCheck" name="rsvEmailCheck" checked>
 					   		<input type="hidden" id="emailCheckValue" name="emailCheckValue">
 					  		</label>
@@ -510,106 +508,122 @@ function chkRsvedTime(){
 	return res;
 }
 
+var submitted = false;
+function doubleSubmitCheck(){
+    if(submitted){
+        return submitted;
+    }else{
+       submitted = true;
+        return false;
+    }
+}
+
+
 //등록/수정 버튼 클릭시 실행
 function checkForm(){
-	
-	var banState = memberBanCheck();
-	if(banState == "T"){
-		alert("차단된 회원이므로 예약 등록 및 수정을 진행하실 수 없습니다.");
-		$('#calendar').fullCalendar('refetchEvents');
-		return false;
-	}
-	
-	//관리자로 로그인했는지 체크 , 로그인X : null
-	var loginChk = <%= session.getAttribute("id") %>;
-   	if(loginChk == null){ //관리자 로그인되지 않았을 때
-   		if($("#rsvNo").val() != null){
-   			var rsvConfirmStateVal = "Y";
-			rsvConfirmStateVal = getRsvConfirmStateVal($("#rsvNo").val());
-    		if(rsvConfirmStateVal == "ACCEPT"){
-    			alert("가예약 승인받은 예약은 관리자만 수정가능합니다.");
-    			$('#calendar').fullCalendar('refetchEvents');
-    			return false;
-    		}
-   		}
-   	}
+   if(!doubleSubmitCheck()){
+   
+   var banState = memberBanCheck();
+   if(banState == "T"){
+      alert("차단된 회원이므로 예약 등록 및 수정을 진행하실 수 없습니다.");
+      $('#calendar').fullCalendar('refetchEvents');
+      return false;
+   }
+   
+   //관리자로 로그인했는지 체크 , 로그인X : null
+   var loginChk = <%= session.getAttribute("id") %>;
+      if(loginChk == null){ //관리자 로그인되지 않았을 때
+         if($("#rsvNo").val() != null){
+            var rsvConfirmStateVal = "Y";
+         rsvConfirmStateVal = getRsvConfirmStateVal($("#rsvNo").val());
+          if(rsvConfirmStateVal == "ACCEPT"){
+             alert("가예약 승인받은 예약은 관리자만 수정가능합니다.");
+             $('#calendar').fullCalendar('refetchEvents');
+             return false;
+          }
+         }
+      }
 
-   	//가예약 상태이면 수정 불가
-	var rsvConfirmStateVal = "Y";
- 	rsvConfirmStateVal = getRsvConfirmStateVal($("#rsvNo").val());
-		
-	if(rsvConfirmStateVal == "N"){
-		alert("가예약 승인 대기 중인 예약은 수정할 수 없습니다.");
-		$('#calendar').fullCalendar('refetchEvents');
-		return false;
-	}
-   	
-	//시작시간 < 종료시간
-	var startIndex = $("#rsvStartTime option").index($("#rsvStartTime option:selected"));
-	var endIndex = $("#rsvEndTime option").index($("#rsvEndTime option:selected"));
-	if(startIndex-1 >= endIndex){
-		alert("유효하지 않는 시간입니다.");
-		$("#rsvStartTime").focus();
-		return false;
-	}
-	
-	//이미 예약된 시간선택 후 등록/수정 진행시, return false
-	var dis = chkRsvedTime()
-	if(dis == "dis"){
-		alert("선택한 시간대에 이미 예약이 되어있어 예약을 진행할 수 없습니다.");
-		return false;
-	}
-	
- 	var overTime = calTotalTime();
- 	var maxTime = getMaxTime();
- 	
-	var submit = "Y";
-	if(overTime == 'T'){
-		if(!confirm(maxTime+"시간 이상 예약은 관리자 승인이 필요합니다. 진행하시겠습니까?")){
-			submit = "N";
-			$('#calendar').fullCalendar('refetchEvents');
-			return false;
-		}else{
-			$("#rsvConfirmState").val("N");
-		}
-	}
+      //가예약 상태이면 수정 불가
+   var rsvConfirmStateVal = "Y";
+    rsvConfirmStateVal = getRsvConfirmStateVal($("#rsvNo").val());
+      
+   if(rsvConfirmStateVal == "N"){
+      alert("가예약 승인 대기 중인 예약은 수정할 수 없습니다.");
+      $('#calendar').fullCalendar('refetchEvents');
+      return false;
+   }
+      
+   //시작시간 < 종료시간
+   var startIndex = $("#rsvStartTime option").index($("#rsvStartTime option:selected"));
+   var endIndex = $("#rsvEndTime option").index($("#rsvEndTime option:selected"));
+   if(startIndex-1 >= endIndex){
+      alert("유효하지 않는 시간입니다.");
+      $("#rsvStartTime").focus();
+      return false;
+   }
+   
+   //이미 예약된 시간선택 후 등록/수정 진행시, return false
+   var dis = chkRsvedTime()
+   if(dis == "dis"){
+      alert("선택한 시간대에 이미 예약이 되어있어 예약을 진행할 수 없습니다.");
+      return false;
+   }
+   
+    var overTime = calTotalTime();
+    var maxTime = getMaxTime();
+    
+   var submit = "Y";
+   if(overTime == 'T'){
+      if(!confirm(maxTime+"시간 이상 예약은 관리자 승인이 필요합니다. 진행하시겠습니까?")){
+         submit = "N";
+         $('#calendar').fullCalendar('refetchEvents');
+         return false;
+      }else{
+         $("#rsvConfirmState").val("N");
+      }
+   }
  
-	preventMonopoly($("#rsvNo").val());
-	var count = $("#monopolyCount").val();
+   preventMonopoly($("#rsvNo").val());
+   var count = $("#monopolyCount").val();
 
-	//이 값이 "T"이면 가예약상태
-	if(count == "T"){
-		if(!confirm("이번주에 "+maxTime*3+"시간 이상 예약을 진행 중이셔서 가예약됩니다. 진행하시겠습니까?")){
-			submit = "N";
-			$('#calendar').fullCalendar('refetchEvents');
-			return false;
-		}else{
-			$("#rsvConfirmState").val("N");
-		}
-	} 
-	
-	if(submit == "N"){
-		return false;
-	}
-	 
-	emailStateCheck();
-	
-	//validation
-	//전화번호 -> 숫자이외의 값이 적혀있을 때, 에러 출력
-	var tel = $("#rsvMemPn").val();
-	if(tel.length>13 || tel.length < 12){
-		alert("전화번호를 다시 확인 후 입력하여 주세요.");
-		$("#rsvMemPn").focus();
-		return false;
-	}
-	
-	//이메일
-	var bool = emailcheck($("#rsvMemEm").val());
- 	if(bool == false){
- 		alert("이메일 형식에 맞춰 값을 적어주세요.");
- 		$("#rsvMemEm").focus();
- 		return false;
- 	}
+   //이 값이 "T"이면 가예약상태
+   if(count == "T"){
+      if(!confirm("이번주에 "+maxTime*3+"시간 이상 예약을 진행 중이셔서 가예약됩니다. 진행하시겠습니까?")){
+         submit = "N";
+         $('#calendar').fullCalendar('refetchEvents');
+         return false;
+      }else{
+         $("#rsvConfirmState").val("N");
+      }
+   } 
+   
+   if(submit == "N"){
+      return false;
+   }
+    
+   emailStateCheck();
+   
+   //validation
+   //전화번호 -> 숫자이외의 값이 적혀있을 때, 에러 출력
+   var tel = $("#rsvMemPn").val();
+   if(tel.length>13 || tel.length < 12){
+      alert("전화번호를 다시 확인 후 입력하여 주세요.");
+      $("#rsvMemPn").focus();
+      return false;
+   }
+   
+   //이메일
+   var bool = emailcheck($("#rsvMemEm").val());
+    if(bool == false){
+       alert("이메일 형식에 맞춰 값을 적어주세요.");
+       $("#rsvMemEm").focus();
+       return false;
+    }
+   }else{
+      return false;
+   }
+   
 }
 
 //textbox에 값 입력되면 validation error 메세지 지우기
@@ -849,6 +863,7 @@ function modifyByDragNDrop(){
 		},
 		success:function(result){
 			alert("이동이 완료되었습니다.");
+			location.href = "/";
 		},
 		error:function(request,status,error){
 			alert("Modify Reservation By Drop Error");
@@ -1065,7 +1080,7 @@ function getInputDayLabel(date) {
 	$("#day").append("("+todayLabel+")");
 }
 
-			
+var reminderInterval;
 $(document).ready(function(){
 	
 	//관리자로 로그인했는지 체크 , 로그인X : null
@@ -1073,7 +1088,7 @@ $(document).ready(function(){
 	
 	//화면 매 설정값(초)마다 refresh
 	 var interValsec;
-
+	
 	   $.ajax({
 	      url : "/AdminManagement/SettingLoad",
 	      dataType : "json",
@@ -1081,6 +1096,10 @@ $(document).ready(function(){
 	      type : "POST",
 	      success : function(data) {
 	         interValsec = data.SET_INDEX_REFRESH+'000';
+	         //reminder메일 수신간격-setting값 반영
+	         reminderInterval = data.SET_EMAIL_TIME;
+	         reminderInterval += "분전 reminder 메일 수신";
+	         $("#reminder").text(reminderInterval);	
 	         setInterval('autoRefresh_div()', interValsec);
 	      },
 	      error : function(request, status, error) {
@@ -1456,6 +1475,7 @@ $(document).ready(function(){
 							success:function(result){
 								alert("이동이 완료되었습니다.");
 								$("#eventContent").dialog("close");
+								
 							},
 							error:function(request,status,error){
 								alert("Modify Reservation By Drop Error");
@@ -1589,7 +1609,7 @@ $(document).ready(function(){
 		},
 		events:function(start, end, timezone, callback){
 			$.ajax({
-				url:"/Reservation/GetReservation",
+				url:"/Reservation/GetReservation",		// 현재 처음 로딩 시 전체 일정을 다 갖고온 후, 이후에는 스크립트만으로 화면에서 데이터 조회 
 				type:"post",
 				dataType:"JSON",
 				success:function(list){
@@ -1840,6 +1860,7 @@ $(document).ready(function(){
 								success:function(result){
 									alert("수정이 완료되었습니다.");
 									$("#eventContent").dialog("close");
+									window.location.reload(true);
 								},
 								error:function(request,status,error){
 									alert("Modify Reservation By Resize Error");
@@ -1903,85 +1924,80 @@ $(document).ready(function(){
 	        }
 	     },
 		 eventMouseover: function (data, event, view) {
-			/* 
-			var name = "";
-			var phoneNum = "";
-			var email = "";
-			var totalTime = "";
-			var state = "";
-			var noshow = 0;
-			 
-			//예약 등록자 정보 가져오기
-			$.ajax({
-				url:"/Reservation/ShowInfoByTooltip",
-				type:"post",
-				dataType:"json",
-				data:{
-					"rsvNo":data.id 
-				},
-				async : false,
-				success:function(list){
-					name = list[0].rsvMemNm;
-					phoneNum = list[0].rsvMemPn;
-					email = list[0].rsvMemEm;
-					totalTime = list[0].rsvTotalTime;
-				},
-				error:function(request,status,error){
-					alert("Show Information By Tooltip Error");
-					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-				}
-			});
-			
-			$.ajax({
-				url:"/Member/MemInfoByTooltip",
-				type:"post",
-				dataType:"json",
-				data:{
-					"memPn":phoneNum
-				},
-				async : false,
-				success:function(list){
-					state = list[0].memState;
-					noshow = list[0].countWarn;
-				},
-				error:function(request,status,error){
-					alert("Member Information By Tooltip Error");
-					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-				}
-			});
-			 
-			var hour = totalTime.substr(1,1);
-			var min = totalTime.substr(3,2);
-
-			if(loginChk == null){ //관리자 로그인되지 않았을 때
-				tooltip = '<div class="tooltiptopicevent" style="width:auto;border-color:#d9d9d9;border-style:solid;border-width:0.2px;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + name +' 님의 예약입니다.<br>Email : '+ email + '<br>전화번호 : ' + phoneNum + '<br>총 소요시간  : '+ hour +'시간 '+ min +'분</div>';
-			}else if(loginChk != null){ //관리자로 로그인시
-				if(state != "정상"){
-					tooltip = '<div class="tooltiptopicevent" style="width:auto;border-color:#d9d9d9;border-style:solid;border-width:0.2px;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + name +' 님의 예약입니다.<br>Email : '+ email + '<br>전화번호 : ' + phoneNum + '<br>총 소요시간  : '+ hour +'시간 '+ min +'분<br>NoShow 수 : '+ noshow +'<br>차단된 회원입니다.</div>';
-				}else{
-					tooltip = '<div class="tooltiptopicevent" style="width:auto;border-color:#d9d9d9;border-style:solid;border-width:0.2px;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + name +' 님의 예약입니다.<br>Email : '+ email + '<br>전화번호 : ' + phoneNum + '<br>총 소요시간  : '+ hour +'시간 '+ min +'분<br>NoShow 수 : '+ noshow +'</div>';
-				}
-			}
-			
-	        $("body").append(tooltip);
-	        $(this).mouseover(function (e) {
-	        	$(this).css('z-index', 10000);
-	            $('.tooltiptopicevent').fadeIn('500');
-	            $('.tooltiptopicevent').fadeTo('10', 1.9);
-	         }).mousemove(function (e) {
-	         	$('.tooltiptopicevent').css('top', e.pageY + 10);
-	         	$('.tooltiptopicevent').css('left', e.pageX + 20);
-	         });
-	         */
+//			var name = "";
+//			var phoneNum = "";
+//			var email = "";
+//			var totalTime = "";
+//			var state = "";
+//			var noshow = 0;
+//			 
+//			//예약 등록자 정보 가져오기
+//			$.ajax({
+//				url:"/Reservation/ShowInfoByTooltip",
+//				type:"post",
+//				dataType:"json",
+//				data:{
+//					"rsvNo":data.id 
+//				},
+//				async : false,
+//				success:function(list){
+//					name = list[0].rsvMemNm;
+//					phoneNum = list[0].rsvMemPn;
+//					email = list[0].rsvMemEm;
+//					totalTime = list[0].rsvTotalTime;
+//				},
+//				error:function(request,status,error){
+//					alert("Show Information By Tooltip Error");
+//					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+//				}
+//			});
+//			
+//			$.ajax({
+//				url:"/Member/MemInfoByTooltip",
+//				type:"post",
+//				dataType:"json",
+//				data:{
+//					"memPn":phoneNum
+//				},
+//				async : false,
+//				success:function(list){
+//					state = list[0].memState;
+//					noshow = list[0].countWarn;
+//				},
+//				error:function(request,status,error){
+//					alert("Member Information By Tooltip Error");
+//					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+//				}
+//			});
+//			 
+//			var hour = totalTime.substr(1,1);
+//			var min = totalTime.substr(3,2);
+//
+//			if(loginChk == null){ //관리자 로그인되지 않았을 때
+//				tooltip = '<div class="tooltiptopicevent" style="width:auto;border-color:#d9d9d9;border-style:solid;border-width:0.2px;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + name +' 님의 예약입니다.<br>Email : '+ email + '<br>전화번호 : ' + phoneNum + '<br>총 소요시간  : '+ hour +'시간 '+ min +'분</div>';
+//			}else if(loginChk != null){ //관리자로 로그인시
+//				if(state != "정상"){
+//					tooltip = '<div class="tooltiptopicevent" style="width:auto;border-color:#d9d9d9;border-style:solid;border-width:0.2px;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + name +' 님의 예약입니다.<br>Email : '+ email + '<br>전화번호 : ' + phoneNum + '<br>총 소요시간  : '+ hour +'시간 '+ min +'분<br>NoShow 수 : '+ noshow +'<br>차단된 회원입니다.</div>';
+//				}else{
+//					tooltip = '<div class="tooltiptopicevent" style="width:auto;border-color:#d9d9d9;border-style:solid;border-width:0.2px;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + name +' 님의 예약입니다.<br>Email : '+ email + '<br>전화번호 : ' + phoneNum + '<br>총 소요시간  : '+ hour +'시간 '+ min +'분<br>NoShow 수 : '+ noshow +'</div>';
+//				}
+//			}
+//			
+//	        $("body").append(tooltip);
+//	        $(this).mouseover(function (e) {
+//	        	$(this).css('z-index', 10000);
+//	            $('.tooltiptopicevent').fadeIn('500');
+//	            $('.tooltiptopicevent').fadeTo('10', 1.9);
+//	         }).mousemove(function (e) {
+//	         	$('.tooltiptopicevent').css('top', e.pageY + 10);
+//	         	$('.tooltiptopicevent').css('left', e.pageX + 20);
+//	         });
 		 },
-	     eventMouseout: function (data, event, view) {
-	    	 /* 
-	         $(this).css('z-index', 8);
-	         $('.tooltiptopicevent').remove();
-			  */
+	     eventMouseout: function (data, event, view) { 
+	         //$(this).css('z-index', 8);
+	         //$('.tooltiptopicevent').remove();
 	     }
 	});
-
 
 	//검색페이지에서 하이퍼링크를 타고 넘어왔을 때
 	if($("#fromSearch").val() == "T"){

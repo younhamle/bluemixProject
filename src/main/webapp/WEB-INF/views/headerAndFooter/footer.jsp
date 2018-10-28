@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+<script src="/resources/js/jquery-2.1.1.min.js" type="text/javascript"></script>
 	
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />  
+<link rel="stylesheet" href="/resources/css/1.8.18/jquery-ui.min.css" type="text/css" />  
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
 <script src="https://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>  
 <link rel="stylesheet" type="text/css"	href="/resources/bootstrap/bootswatch.css" />
@@ -15,7 +15,7 @@
 <script type="text/javascript" src="/resources/fullcalander/fullcalendar.min.js"></script>
 <script type="text/javascript" src="/resources/fullcalander/locale-all.js"></script>
 <script type="text/javascript" src="/resources/scheduler/scheduler.min.js"></script>
-<link rel="stylesheet" href="https://formden.com/static/cdn/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/resources/font-awesome-4.4.0/css/font-awesome.min.css" />
 <script type="text/javascript" src="/resources/loadingBar/ajaxLoading.js"></script>   
 
 
