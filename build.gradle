@@ -39,7 +39,7 @@ dependencies {
 	compile('org.apache.poi:poi-ooxml:3.16') // .xlsx
     compile('org.apache.poi:poi:3.16') // .xls
     compile group: 'org.springframework.security', name: 'spring-security-taglibs'
-	compile('org.springframework.boot:spring-boot-starter-tomcat:1.5.7')
+	compile('org.springframework.boot:spring-boot-starter-tomcat:1.5.7.RELEASE')
 	compile('org.apache.tomcat.embed:tomcat-embed-core:8.5.20')
 	compile('org.apache.tomcat.embed:tomcat-embed-el:8.5.20')
 	compile('org.apache.tomcat.embed:tomcat-embed-websocket:8.5.20')
